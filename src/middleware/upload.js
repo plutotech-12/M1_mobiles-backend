@@ -1,6 +1,6 @@
 const multer = require("multer");
 
-const storage = multer.memoryStorage(); // store files in memory
-const upload = multer({ storage });
+// We use memory storage because Cloudinary upload_stream requires file.buffer
+const storage = multer.memoryStorage();
 
-module.exports = upload;
+module.exports = multer({ storage });

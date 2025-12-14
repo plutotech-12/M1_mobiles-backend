@@ -4,7 +4,15 @@ const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  role: { type: String, default: "customer" }   // customer or admin
+  role: { type: String, default: "customer" },  // customer or admin
+
+  cart: [
+    {
+      productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+      quantity: { type: Number, default: 1 }
+    }
+  ]
+
 }, {
   timestamps: true
 });

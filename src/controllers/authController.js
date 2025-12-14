@@ -8,9 +8,14 @@ exports.register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    // check existing user
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "All fields required" });
+    }
+
     const userExists = await User.findOne({ email });
-    if (userExists) return res.status(400).json({ message: "Email already in use" });
+    if (userExists) {
+      return res.status(400).json({ message: "Email already in use" });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -19,7 +24,6 @@ exports.register = async (req, res) => {
       email,
       password: hashedPassword,
     });
-
 
     res.status(201).json({ message: "User registered", user });
   } catch (error) {
@@ -30,9 +34,7 @@ exports.register = async (req, res) => {
 // LOGIN
 exports.login = async (req, res) => {
   try {
-    console.log("LOGIN BODY:", req.body);  // 👈 ADD THIS
     const { email, password } = req.body;
-    console.log("EMAIL:", email, "PASSWORD:", password); // 👈 ADD THIS
 
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: "Invalid credentials" });
@@ -48,7 +50,6 @@ exports.login = async (req, res) => {
 
     res.json({ message: "Login success", token, user });
   } catch (error) {
-    console.error("LOGIN ERROR:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };

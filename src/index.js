@@ -1,25 +1,54 @@
+// ⭐ LOAD .env FIRST
+require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
-const dotenv = require("dotenv");
-const connectDB = require("./config/db.js");
-
-const productRoutes = require("./routes/products.js");
-const authRoutes = require("./routes/auth.js");   // ✅ ADD THIS
-
-dotenv.config();
+const connectDB = require("./config/db");
 
 const app = express();
 
-app.use(cors());
+// =========================
+// MIDDLEWARE
+// =========================
+app.use(
+  cors({
+    origin: "http://localhost:3000", // frontend URL
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
-// ROUTES
-app.use("/products", productRoutes);
-app.use("/auth", authRoutes);   // ✅ VERY IMPORTANT
-
+// =========================
+// DATABASE
+// =========================
 connectDB();
 
+// =========================
+// ROUTES
+// =========================
+const productRoutes = require("./routes/products");
+const authRoutes = require("./routes/auth");
+const cartRoutes = require("./routes/cart");
+const adminRoutes = require("./routes/admin");
+
+// IMPORTANT: use /api prefix
+app.use("/api/products", productRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/cart", cartRoutes);
+app.use("/api/admin", adminRoutes);
+
+// =========================
+// HEALTH CHECK (VERY IMPORTANT)
+// =========================
+app.get("/api/health", (req, res) => {
+  res.json({ status: "OK", backend: "running" });
+});
+
+// =========================
+// SERVER
+// =========================
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
