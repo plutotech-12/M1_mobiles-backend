@@ -11,16 +11,7 @@ const app = express();
 // MIDDLEWARE
 // =========================
 app.use(
-  cors({
-    origin: [
-      "https://m1-mobiles-frontend.vercel.app/",
-      "https://m1-mobiles-frontend-git-main-yasars-projects-a4b7c84c.vercel.app",
-      "https://m1-mobiles-frontend-inlhec7r4-yasars-projects-a4b7c84c.vercel.app/",
-      "http://localhost:3000"
-
-    ], // frontend URL
-    credentials: true,
-  })
+  cors()
 );
 
 app.use(express.json());
